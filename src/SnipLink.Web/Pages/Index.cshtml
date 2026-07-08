@@ -1,0 +1,70 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Shorten a URL";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h3 mb-3">Shorten a URL</h1>
+
+        @if (Model.Created is not null)
+        {
+            <div class="card border-success mb-4">
+                <div class="card-body">
+                    <h2 class="h5 text-success">Your short link is ready</h2>
+                    <div class="input-group my-2">
+                        <input id="shortUrl" type="text" class="form-control" readonly
+                               value="@Model.Created.ShortUrl" />
+                        <button class="btn btn-outline-secondary" type="button"
+                                onclick="copyShortUrl()">Copy</button>
+                    </div>
+                    <p class="mb-1 text-muted small">Points to: @Model.Created.LongUrl</p>
+                    <details class="mt-2">
+                        <summary class="small">Owner token (keep this to manage the link via API)</summary>
+                        <code class="small">@Model.Created.OwnerToken</code>
+                    </details>
+                    <a class="btn btn-sm btn-link px-0 mt-2"
+                       asp-page="/Stats" asp-route-code="@Model.Created.Code">View stats →</a>
+                </div>
+            </div>
+        }
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.LongUrl" class="form-label"></label>
+                <input asp-for="Input.LongUrl" class="form-control" placeholder="https://example.com/some/very/long/url" />
+                <span asp-validation-for="Input.LongUrl" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <label asp-for="Input.Alias" class="form-label"></label>
+                    <input asp-for="Input.Alias" class="form-control" placeholder="my-alias" />
+                    <span asp-validation-for="Input.Alias" class="text-danger"></span>
+                    <div class="form-text">3–20 letters/numbers.</div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label asp-for="Input.ExpiresAt" class="form-label"></label>
+                    <input asp-for="Input.ExpiresAt" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="Input.ExpiresAt" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Shorten</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function copyShortUrl() {
+            const input = document.getElementById('shortUrl');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+        }
+    </script>
+}

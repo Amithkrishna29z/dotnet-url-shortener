@@ -1,0 +1,64 @@
+@page
+@model LinksModel
+@{
+    ViewData["Title"] = "My Links";
+}
+
+<h1 class="h3 mb-3">My Links</h1>
+
+@if (Model.Links.Count == 0)
+{
+    <p class="text-muted">No links yet. <a asp-page="/Index">Shorten one →</a></p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Short</th>
+                    <th>Destination</th>
+                    <th class="text-end">Clicks</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var link in Model.Links)
+            {
+                <tr>
+                    <td><a href="@link.ShortUrl" target="_blank">/@link.Code</a></td>
+                    <td class="text-truncate" style="max-width: 320px;">
+                        <span title="@link.LongUrl">@link.LongUrl</span>
+                    </td>
+                    <td class="text-end">@link.TotalClicks</td>
+                    <td>
+                        @if (!link.IsActive)
+                        {
+                            <span class="badge bg-secondary">inactive</span>
+                        }
+                        else if (link.ExpiresAt is not null && link.ExpiresAt <= DateTime.UtcNow)
+                        {
+                            <span class="badge bg-warning text-dark">expired</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">active</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary"
+                           asp-page="/Stats" asp-route-code="@link.Code">Stats</a>
+                        @if (link.IsActive)
+                        {
+                            <form method="post" asp-page-handler="Deactivate" asp-route-code="@link.Code" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Deactivate</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

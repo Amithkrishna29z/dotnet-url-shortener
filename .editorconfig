@@ -1,0 +1,28 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+[*.{json,yml,yaml,csproj,props,targets}]
+indent_size = 2
+
+[*.cs]
+# Namespaces
+csharp_style_namespace_declarations = file_scoped:suggestion
+# var preferences
+csharp_style_var_when_type_is_apparent = true:suggestion
+# Expression-bodied members
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+# this. preferences
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+# using directives
+dotnet_sort_system_directives_first = true
+
+[*.{md,cshtml}]
+trim_trailing_whitespace = false

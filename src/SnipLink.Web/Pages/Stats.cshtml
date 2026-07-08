@@ -1,0 +1,77 @@
+@page "/links/{code}/stats"
+@using System.Text.Json
+@model StatsModel
+@{
+    ViewData["Title"] = "Link stats";
+}
+
+<a asp-page="/Links" class="btn btn-sm btn-link px-0">← My Links</a>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+else if (Model.Stats is not null)
+{
+    <h1 class="h3 mb-3">Stats for <code>/@Model.Stats.Code</code></h1>
+
+    <div class="row mb-4">
+        <div class="col-sm-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6">@Model.Stats.TotalClicks</div>
+                    <div class="text-muted">total clicks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h5">Clicks over time</h2>
+    @if (Model.Stats.Daily.Count == 0)
+    {
+        <p class="text-muted">No aggregated daily data yet. The worker rolls clicks up on an interval.</p>
+    }
+    else
+    {
+        <canvas id="dailyChart" height="100" class="mb-4"></canvas>
+    }
+
+    <h2 class="h5">Top referrers</h2>
+    @if (Model.Stats.TopReferrers.Count == 0)
+    {
+        <p class="text-muted">No referrer data yet.</p>
+    }
+    else
+    {
+        <table class="table table-sm w-auto">
+            <thead><tr><th>Referrer</th><th class="text-end">Clicks</th></tr></thead>
+            <tbody>
+            @foreach (var r in Model.Stats.TopReferrers)
+            {
+                <tr><td>@r.Referrer</td><td class="text-end">@r.Count</td></tr>
+            }
+            </tbody>
+        </table>
+    }
+
+    @section Scripts {
+        @if (Model.Stats.Daily.Count > 0)
+        {
+            var labels = Model.Stats.Daily.Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
+            var counts = Model.Stats.Daily.Select(d => d.Count).ToList();
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+            <script>
+                const labels = @Html.Raw(JsonSerializer.Serialize(labels));
+                const data = @Html.Raw(JsonSerializer.Serialize(counts));
+                new Chart(document.getElementById('dailyChart'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{ label: 'Clicks', data: data, borderColor: '#0d6efd', tension: 0.2, fill: false }]
+                    },
+                    options: { scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+                });
+            </script>
+        }
+    }
+}
