@@ -11,8 +11,6 @@ builder.Services.AddSerilog((services, config) =>
 
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection(WorkerOptions.SectionName));
 
-// Infrastructure gives us the DbContext and IClickAggregator. The worker does not
-// need the cache or click recorder, but AddInfrastructure wires them harmlessly.
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHostedService<AggregationWorker>();
 

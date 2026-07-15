@@ -77,7 +77,6 @@ public class LinkService : ILinkService
         if (!link.IsActive || IsExpired(link.ExpiresAt))
             return RedirectResolution.Gone;
 
-        // Only followable links are cached.
         await _cache.SetAsync(code, new CachedLink(link.Id, link.LongUrl, link.ExpiresAt), ct);
         return RedirectResolution.Found(link.LongUrl, link.Id);
     }
@@ -108,7 +107,6 @@ public class LinkService : ILinkService
             link.IsActive = request.IsActive.Value;
 
         await _links.UpdateAsync(link, ct);
-        // The cached entry may now be stale (new expiry / deactivated) — drop it.
         await _cache.RemoveAsync(code, ct);
 
         var total = await _analytics.GetTotalClicksAsync(link.Id, ct);

@@ -25,7 +25,6 @@ public class LinkApiTests : IClassFixture<CustomWebApplicationFactory>
     {
         var client = CreateClient();
 
-        // Create
         var createResponse = await client.PostAsJsonAsync("/api/v1/links",
             new CreateLinkRequest("https://example.com/target", null, null));
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -33,16 +32,13 @@ public class LinkApiTests : IClassFixture<CustomWebApplicationFactory>
         created.Should().NotBeNull();
         created!.Code.Should().NotBeNullOrEmpty();
 
-        // Redirect
         var redirect = await client.GetAsync($"/{created.Code}");
-        redirect.StatusCode.Should().Be(HttpStatusCode.Found); // 302
+        redirect.StatusCode.Should().Be(HttpStatusCode.Found);
         redirect.Headers.Location!.ToString().Should().Be("https://example.com/target");
 
-        // Click is recorded asynchronously; verify it lands in the DB first.
         var dbClicks = await PollDbClicks(created.Code);
         dbClicks.Should().BeGreaterThanOrEqualTo(1);
 
-        // ...and that stats (total clicks) reflect it.
         var stats = await PollStatsUntilClicks(client, created.Code, created.OwnerToken);
         stats.TotalClicks.Should().BeGreaterThanOrEqualTo(1);
     }
@@ -77,7 +73,7 @@ public class LinkApiTests : IClassFixture<CustomWebApplicationFactory>
 
         var client = CreateClient();
         var response = await client.GetAsync($"/{code}");
-        response.StatusCode.Should().Be(HttpStatusCode.Gone); // 410
+        response.StatusCode.Should().Be(HttpStatusCode.Gone);
     }
 
     [Fact]

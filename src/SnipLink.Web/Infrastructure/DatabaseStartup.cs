@@ -7,14 +7,11 @@ namespace SnipLink.Web.Infrastructure;
 
 public static class DatabaseStartup
 {
-    /// <summary>Applies migrations on startup and, if enabled, seeds demo data.</summary>
     public static async Task MigrateAndSeedAsync(WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Relational providers get migrations applied; the in-memory test provider
-        // does not support them, so just ensure the schema exists.
         if (db.Database.IsRelational())
             await db.Database.MigrateAsync();
         else
@@ -40,7 +37,6 @@ public static class DatabaseStartup
         };
         db.ShortLinks.Add(link);
 
-        // Synthetic click history so the stats page looks alive in a demo.
         var referrers = new[] { "https://news.ycombinator.com/", "https://twitter.com/", null };
         var random = new Random(42);
         for (var dayOffset = 6; dayOffset >= 0; dayOffset--)

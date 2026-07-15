@@ -5,15 +5,6 @@ using SnipLink.Infrastructure.Persistence;
 
 namespace SnipLink.Infrastructure.Clicks;
 
-/// <summary>
-/// Recomputes per-(link, day) click counts from the raw ClickEvent rows and upserts
-/// them into DailyStat. Idempotent by design: it sets each day-bucket's count to the
-/// recomputed total, so re-running produces identical results.
-///
-/// Tradeoff: this recomputes counts over all click history each cycle, which is fine
-/// for a demo-scale dataset. A production version would track a watermark and only
-/// process new rows — noted as future work in the README.
-/// </summary>
 public class ClickAggregator : IClickAggregator
 {
     private readonly AppDbContext _db;

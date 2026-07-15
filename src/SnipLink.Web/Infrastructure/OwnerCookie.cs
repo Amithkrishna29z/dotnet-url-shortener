@@ -2,11 +2,6 @@ using SnipLink.Domain;
 
 namespace SnipLink.Web.Infrastructure;
 
-/// <summary>
-/// Manages the per-browser owner token cookie. Links created via the UI share this
-/// token so the "My Links" page can list them. This is a lightweight stand-in for
-/// real accounts (see README "future work").
-/// </summary>
 public static class OwnerCookie
 {
     public const string Name = "sniplink_owner";

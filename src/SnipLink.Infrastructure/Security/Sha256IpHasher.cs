@@ -6,10 +6,6 @@ using SnipLink.Application.Abstractions;
 
 namespace SnipLink.Infrastructure.Security;
 
-/// <summary>
-/// Hashes IPs with SHA-256 over a configured salt so raw addresses are never stored.
-/// The salt makes the stored hashes resistant to trivial rainbow-table reversal.
-/// </summary>
 public class Sha256IpHasher : IIpHasher
 {
     private readonly string _salt;

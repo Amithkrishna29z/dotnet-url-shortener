@@ -28,8 +28,6 @@ builder.Services.AddHostedService<ClickFlushService>();
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
-// Validation: run FluentValidation on action arguments; [ApiController] turns
-// failures into a 400 ValidationProblemDetails automatically.
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddProblemDetails();
@@ -52,8 +50,6 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-// Behind the Docker/reverse proxy, trust forwarded headers so the real client IP
-// (used for hashing + rate limiting) is read from X-Forwarded-For.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -86,5 +82,4 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" })).ExcludeFromDescri
 
 app.Run();
 
-// Exposed so the integration test host (WebApplicationFactory) can reference this assembly.
 public partial class Program;

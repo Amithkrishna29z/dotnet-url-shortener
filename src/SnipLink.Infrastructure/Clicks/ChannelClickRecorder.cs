@@ -4,12 +4,6 @@ using SnipLink.Application.Links;
 
 namespace SnipLink.Infrastructure.Clicks;
 
-/// <summary>
-/// Buffers clicks in an in-memory bounded channel so recording never blocks the
-/// redirect. <see cref="ClickFlushService"/> drains the channel and persists clicks.
-/// If the buffer is full (sustained spike), new clicks are dropped rather than
-/// slowing redirects — analytics is best-effort, redirect latency is not.
-/// </summary>
 public class ChannelClickRecorder : IClickRecorder
 {
     private readonly Channel<ClickInfo> _channel;

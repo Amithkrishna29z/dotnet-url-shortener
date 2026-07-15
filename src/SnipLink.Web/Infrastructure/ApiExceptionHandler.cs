@@ -4,10 +4,6 @@ using SnipLink.Application;
 
 namespace SnipLink.Web.Infrastructure;
 
-/// <summary>
-/// Translates known application exceptions into RFC 7807 ProblemDetails responses.
-/// Validation 400s are handled earlier by [ApiController] model-state integration.
-/// </summary>
 public class ApiExceptionHandler : IExceptionHandler
 {
     private readonly IProblemDetailsService _problemDetails;

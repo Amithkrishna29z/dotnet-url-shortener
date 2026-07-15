@@ -28,8 +28,6 @@ public static class DependencyInjection
 
         AddCache(services, configuration);
 
-        // The recorder is a singleton holding the in-memory click buffer; the redirect
-        // endpoint enqueues into it and ClickFlushService (registered by the web host) drains it.
         services.AddSingleton<ChannelClickRecorder>();
         services.AddSingleton<IClickRecorder>(sp => sp.GetRequiredService<ChannelClickRecorder>());
 
@@ -42,7 +40,6 @@ public static class DependencyInjection
 
         if (string.IsNullOrWhiteSpace(redisConnection))
         {
-            // No Redis configured — redirects resolve straight from the database.
             services.AddSingleton<ILinkCache, NullLinkCache>();
             return;
         }
@@ -50,8 +47,6 @@ public static class DependencyInjection
         services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
             var options = ConfigurationOptions.Parse(redisConnection);
-            // Don't fail startup or throw mid-request if Redis is unreachable;
-            // RedisLinkCache catches failures and falls back to the database.
             options.AbortOnConnectFail = false;
             var logger = sp.GetRequiredService<ILogger<RedisLinkCache>>();
             var muxer = ConnectionMultiplexer.Connect(options);

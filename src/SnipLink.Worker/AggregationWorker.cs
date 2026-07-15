@@ -5,10 +5,6 @@ using SnipLink.Infrastructure.Persistence;
 
 namespace SnipLink.Worker;
 
-/// <summary>
-/// Periodically rolls raw click events up into daily stats. Runs on a configurable
-/// interval and optionally prunes old raw clicks after aggregation.
-/// </summary>
 public class AggregationWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
@@ -52,7 +48,6 @@ public class AggregationWorker : BackgroundService
         }
         catch (OperationCanceledException)
         {
-            // Shutting down — nothing to do.
         }
         catch (Exception ex)
         {

@@ -7,10 +7,6 @@ using SnipLink.Infrastructure.Persistence;
 
 namespace SnipLink.Infrastructure.Clicks;
 
-/// <summary>
-/// Drains the click channel and writes batches to the database. Runs inside the web
-/// host so the redirect endpoint stays fast (it only enqueues).
-/// </summary>
 public class ClickFlushService : BackgroundService
 {
     private const int MaxBatchSize = 200;
@@ -50,7 +46,6 @@ public class ClickFlushService : BackgroundService
         }
         catch (OperationCanceledException)
         {
-            // Shutting down — drain whatever is left so we don't lose buffered clicks.
             while (reader.TryRead(out var click))
                 batch.Add(ToEntity(click));
             if (batch.Count > 0)

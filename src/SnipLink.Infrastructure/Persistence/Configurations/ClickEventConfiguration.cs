@@ -18,7 +18,6 @@ public class ClickEventConfiguration : IEntityTypeConfiguration<ClickEvent>
         builder.Property(x => x.IpHash).HasMaxLength(64);
         builder.Property(x => x.Country).HasMaxLength(2);
 
-        // Supports the worker's "new clicks for a link in a date range" scans.
         builder.HasIndex(x => new { x.ShortLinkId, x.ClickedAt });
     }
 }

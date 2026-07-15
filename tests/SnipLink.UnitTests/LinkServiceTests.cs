@@ -43,8 +43,8 @@ public class LinkServiceTests
     public async Task Create_RetriesOnCodeCollision()
     {
         _repo.SetupSequence(r => r.CodeExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true)   // first generated code collides
-            .ReturnsAsync(false); // second is free
+            .ReturnsAsync(true)
+            .ReturnsAsync(false);
         var sut = CreateSut();
 
         var result = await sut.CreateAsync(new CreateLinkRequest("https://example.com", null, null));

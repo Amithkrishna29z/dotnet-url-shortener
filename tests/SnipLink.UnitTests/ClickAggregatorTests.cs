@@ -52,11 +52,11 @@ public class ClickAggregatorTests
         SeedClicks(db, linkId);
 
         await new ClickAggregator(db).AggregateAsync();
-        await new ClickAggregator(db).AggregateAsync(); // run again over the same data
+        await new ClickAggregator(db).AggregateAsync();
 
         var stats = await db.DailyStats.ToListAsync();
         stats.Should().HaveCount(2);
-        stats.Sum(s => s.ClickCount).Should().Be(4); // not doubled
+        stats.Sum(s => s.ClickCount).Should().Be(4);
     }
 
     [Fact]

@@ -29,20 +29,19 @@ public class ValidatorTests
 
     [Theory]
     [InlineData("abc")]
-    [InlineData("my-alias-1234")] // hyphen is not alphanumeric -> invalid (covered below)
+    [InlineData("my-alias-1234")]
     [InlineData("Valid123")]
     public void Create_AliasAlphanumericRule(string alias)
     {
         var result = _validator.Validate(new CreateLinkRequest("https://example.com", alias, null));
-        // "my-alias-1234" contains a hyphen, so it should fail; the others pass.
         var expectValid = alias.All(char.IsLetterOrDigit);
         result.IsValid.Should().Be(expectValid);
     }
 
     [Theory]
-    [InlineData("ab")]      // too short
-    [InlineData("api")]     // reserved
-    [InlineData("swagger")] // reserved
+    [InlineData("ab")]
+    [InlineData("api")]
+    [InlineData("swagger")]
     public void Create_RejectsBadAliases(string alias)
     {
         var result = _validator.Validate(new CreateLinkRequest("https://example.com", alias, null));

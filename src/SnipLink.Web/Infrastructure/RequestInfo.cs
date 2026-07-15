@@ -1,9 +1,7 @@
 namespace SnipLink.Web.Infrastructure;
 
-/// <summary>Helpers for pulling request metadata used by click recording and rate limiting.</summary>
 public static class RequestInfo
 {
-    /// <summary>The client IP as a string, honouring forwarded headers (set up in Program).</summary>
     public static string? ClientIp(this HttpContext context) =>
         context.Connection.RemoteIpAddress?.ToString();
 

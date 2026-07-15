@@ -15,7 +15,6 @@ public class DailyStatConfiguration : IEntityTypeConfiguration<DailyStat>
         builder.Property(x => x.Date).IsRequired();
         builder.Property(x => x.ClickCount).IsRequired();
 
-        // One row per link per day; lets aggregation upsert idempotently.
         builder.HasIndex(x => new { x.ShortLinkId, x.Date }).IsUnique();
     }
 }

@@ -24,8 +24,6 @@ public class AnalyticsRepository : IAnalyticsRepository
 
     public async Task<IReadOnlyList<ReferrerCount>> GetTopReferrersAsync(Guid shortLinkId, int limit, CancellationToken ct = default)
     {
-        // Group by the raw (nullable) referrer so the query translates cleanly, then
-        // map a missing referrer to a friendly label in memory.
         var grouped = await _db.ClickEvents
             .Where(c => c.ShortLinkId == shortLinkId)
             .GroupBy(c => c.Referrer)

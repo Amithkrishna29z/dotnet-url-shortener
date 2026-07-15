@@ -7,11 +7,6 @@ using StackExchange.Redis;
 
 namespace SnipLink.Infrastructure.Caching;
 
-/// <summary>
-/// Redis-backed link cache. Every operation is wrapped so a Redis outage degrades
-/// performance (falls back to the DB) rather than breaking the redirect: reads
-/// return null and writes/removes become no-ops on failure.
-/// </summary>
 public class RedisLinkCache : ILinkCache
 {
     private const string KeyPrefix = "sniplink:code:";

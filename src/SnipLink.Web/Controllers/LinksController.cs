@@ -15,7 +15,6 @@ public class LinksController : ControllerBase
 
     public LinksController(ILinkService links) => _links = links;
 
-    /// <summary>Create a short link. Returns the code, short URL, and the owner token.</summary>
     [HttpPost]
     [EnableRateLimiting(RateLimitPolicies.CreateLink)]
     [ProducesResponseType(typeof(CreateLinkResponse), StatusCodes.Status201Created)]
@@ -27,7 +26,6 @@ public class LinksController : ControllerBase
         return CreatedAtAction(nameof(Get), new { code = result.Code }, result);
     }
 
-    /// <summary>Get link metadata. Requires the matching owner token.</summary>
     [HttpGet("{code}")]
     [ProducesResponseType(typeof(LinkResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -38,7 +36,6 @@ public class LinksController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>Get analytics for a link: total clicks, daily series, top referrers.</summary>
     [HttpGet("{code}/stats")]
     [ProducesResponseType(typeof(StatsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -49,7 +46,6 @@ public class LinksController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>Update a link's expiry and/or active flag.</summary>
     [HttpPatch("{code}")]
     [ProducesResponseType(typeof(LinkResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,7 +57,6 @@ public class LinksController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>Deactivate a link so it stops redirecting.</summary>
     [HttpDelete("{code}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
